@@ -23,17 +23,20 @@ public class Receiver implements Runnable{
         {
         	try
         	{
-        		Socket input = receiving.accept();
-        		BufferedReader reader = new BufferedReader(new InputStreamReader(input.getInputStream()));
+        		BufferedReader reader = new BufferedReader(new InputStreamReader(receiving.accept().getInputStream()));
+        		
+        		// If there is an incoming message 
         		if (reader.readLine() != null)
         		{
+        			
         			(new ReceiverWorker(reader.readLine())).run();;
+        			
         		}
         		
         	}
         	catch (Exception e)
         	{
-        		System.out.println("Could not start message processing. ");
+        		//System.out.println(e);
         	}
         	
         }

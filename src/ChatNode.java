@@ -52,6 +52,8 @@ public class ChatNode implements Runnable{
         	System.out.println(receiver.getLocalPort());
         	
             (new Sender(new Socket(host_ip, receiver.getLocalPort()))).run();
+            
+        	//(new Sender(new Socket("192.168.1.4", 5555))).run();
             //(new Thread(new Sender(new Socket(host, port)))).start();
             (new Receiver(new ServerSocket(0))).run();
             //(new Thread(new Receiver(new ServerSocket(port)))).start();

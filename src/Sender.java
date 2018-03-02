@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.*;
 
 public class Sender implements Runnable{
     
@@ -27,10 +28,21 @@ public class Sender implements Runnable{
         }        
     }
     
+    
     @Override
     public void run()
     {
         System.out.println("Started sender thread. ");
         System.out.println("Started Sender thread. On IP: " + ip_addr + " Port: " + port_num);
+        
+        // Looking for user input to make their message
+    	
+    	System.out.print("Message: \n");
+    	Scanner message = new Scanner(System.in);
+    	
+    	output.println(message);
+    	output.close();
     }
+    
+    
 }

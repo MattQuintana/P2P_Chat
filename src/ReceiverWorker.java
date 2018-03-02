@@ -10,16 +10,22 @@ public class ReceiverWorker implements Runnable{
 	@Override
 	public void run()
 	{
+		System.out.println("Receiver worker run");
 		if (message.startsWith("./quit"))
 		{
 			System.out.println("Leaving the chat. ");
 			
 		}
-		if (message.startsWith("./join"))
+		else if (message.startsWith("./join"))
 		{
 			System.out.println("Joining the chat");
 			
 		}
+		else
+		{
+			System.out.println(message);
+		}
+		
 	}
 
 }
