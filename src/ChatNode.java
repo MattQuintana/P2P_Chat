@@ -44,9 +44,16 @@ public class ChatNode implements Runnable{
         System.out.println("In chatnode run. ");
         try
         {
-            (new Sender(new Socket("localhost", 12345))).run();
+        	ServerSocket receiver = new ServerSocket(0);
+        	String full_ip_string = receiver.getInetAddress().toString().replace("/", ":");
+        	String host_ip = full_ip_string.split(":")[0];
+        	
+        	System.out.println(host_ip);
+        	System.out.println(receiver.getLocalPort());
+        	
+            (new Sender(new Socket(host_ip, receiver.getLocalPort()))).run();
             //(new Thread(new Sender(new Socket(host, port)))).start();
-            //(new Receiver(new ServerSocket(12345))).run();
+            (new Receiver(new ServerSocket(0))).run();
             //(new Thread(new Receiver(new ServerSocket(port)))).start();
         }
         catch (Exception e)
