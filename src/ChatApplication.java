@@ -15,7 +15,10 @@ public class ChatApplication {
         {
             File config_file = new File(config_path);
             ChatNode new_node = new ChatNode(config_file);
+            new_node.participants.put(1, new_node);
+            //ChatNode another_node = new ChatNode(config_file);
             new_node.run();
+            //another_node.run();
         }
         catch(Exception e)
         {

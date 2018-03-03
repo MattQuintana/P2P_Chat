@@ -2,14 +2,17 @@
 
 import java.net.*;
 import java.io.*;
+import java.util.*;
 
 
-public class ChatNode implements Runnable{
+public class ChatNode implements Runnable{   
     
-    public static int[] ports;
+    public static Map<Integer, ChatNode> participants;
     
     private int port;
     private String host;
+    
+    private boolean is_connected;
     
     public ChatNode(File config_file)
     {
@@ -34,6 +37,27 @@ public class ChatNode implements Runnable{
         }
         
     }
+    
+    public void set_connect(boolean is_true)
+    {
+    	is_connected = is_true;
+    }
+    
+    public boolean is_connected()
+    {
+    	return is_connected;
+    }
+    
+    public int get_port() 
+    {
+    	return port;
+    }
+    
+    public String get_ip()
+    {
+    	return host;
+    }
+    
     @Override
     public void run()
     {
@@ -51,11 +75,12 @@ public class ChatNode implements Runnable{
         	System.out.println(host_ip);
         	System.out.println(receiver.getLocalPort());
         	
-            (new Sender(new Socket(host_ip, receiver.getLocalPort()))).run();
+        	(new Thread(new Receiver(new ServerSocket(0), this))).start();
+            (new Thread(new Sender(this))).start();
             
         	//(new Sender(new Socket("192.168.1.4", 5555))).run();
             //(new Thread(new Sender(new Socket(host, port)))).start();
-            (new Receiver(new ServerSocket(0))).run();
+            
             //(new Thread(new Receiver(new ServerSocket(port)))).start();
         }
         catch (Exception e)

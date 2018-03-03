@@ -7,42 +7,69 @@ public class Sender implements Runnable{
     
     private Socket sender_socket;
     private PrintWriter output;
+    private ChatNode node;
     
-    private int port_num;
-	private String ip_addr;
-    
-    public Sender(Socket s_socket)
+    public Sender(ChatNode node)
     {
-        System.out.println("Establishing sender socket");
-        sender_socket = s_socket;
-        
-        port_num = sender_socket.getLocalPort();
-    	ip_addr = sender_socket.getInetAddress().toString().replace("/", "");
-        try
-        {
-            output = new PrintWriter(sender_socket.getOutputStream());
-        }
-        catch (Exception e)
-        {
-            System.out.println("Error creating output writer.");
-        }        
+          this.node = node;
     }
     
     
     @Override
     public void run()
     {
-        System.out.println("Started sender thread. ");
-        System.out.println("Started Sender thread. On IP: " + ip_addr + " Port: " + port_num);
-        
         // Looking for user input to make their message
-    	
-    	System.out.print("Message: \n");
-    	Scanner message = new Scanner(System.in);
-    	
-    	output.println(message);
-    	output.close();
+    	while(true)
+    	{
+    		System.out.print("Message: \n");
+        	Scanner message = new Scanner(System.in);
+        	
+        	String input = message.nextLine();
+        	
+        	if (input.startsWith("./quit"))
+    		{
+        		input = "You have left the chat.";
+        		node.set_connect(false);
+        		
+        		// Set a quit flag 
+    			
+    		}
+    		else if (input.startsWith("./join"))
+    		{
+    			input = "You have joined the chat.";    			
+    		}
+    		
+        	
+        	for (ChatNode entry : ChatNode.participants.values())
+        	{
+        		try 
+        		{
+        			Socket send_socket = new Socket(entry.get_ip(), entry.get_port());
+        			output = new PrintWriter(send_socket.getOutputStream());
+        			output.println(input);
+        			System.out.println(input);
+        			output.close();
+        		}
+        		catch (Exception e)
+        		{
+        			System.out.println("Couldn't create socket to: " + entry.get_ip() + entry.get_port());
+        		}
+        		
+        	}
+        	
+        	// for every entry in the participants
+        		// try to create a socket with Chatnode.ip
+        		// and ChatNode.port 
+        		// Send the message over the printwriter - output - to the socket        		
+        	
+        	// Check quit flag 
+        		// If has quit, 
+        			// break loop and close connection, and remove from table
+        	if (!node.is_connected())
+        	{
+        		System.out.println("Exiting");
+        		break;
+        	}
+    	}
     }
-    
-    
 }
