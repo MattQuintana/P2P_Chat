@@ -14,15 +14,18 @@ public class ChatApplication {
         try
         {
             File config_file = new File(config_path);
+            ChatNode test_node = new ChatNode(config_file);
             ChatNode new_node = new ChatNode(config_file);
-            new_node.participants.put(1, new_node);
+            //ChatNode.participants.put(1, test_node);
+            //ChatNode.participants.put(2, new_node);
+            System.out.println(ChatNode.participants.keySet());
             //ChatNode another_node = new ChatNode(config_file);
             new_node.run();
             //another_node.run();
         }
         catch(Exception e)
         {
-            System.out.println("Error creating the new chat node.");
+            System.out.println(e);
         }
     }
     

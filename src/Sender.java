@@ -42,6 +42,8 @@ public class Sender implements Runnable{
         	
         	for (ChatNode entry : ChatNode.participants.values())
         	{
+        		System.out.println(entry.get_ip());
+        		System.out.println(entry.get_port());
         		try 
         		{
         			Socket send_socket = new Socket(entry.get_ip(), entry.get_port());
@@ -52,9 +54,8 @@ public class Sender implements Runnable{
         		}
         		catch (Exception e)
         		{
-        			System.out.println("Couldn't create socket to: " + entry.get_ip() + entry.get_port());
+        			System.out.println("Couldn't create socket to: " + entry.get_ip() + ":" + entry.get_port());
         		}
-        		
         	}
         	
         	// for every entry in the participants

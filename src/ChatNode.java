@@ -7,7 +7,7 @@ import java.util.*;
 
 public class ChatNode implements Runnable{   
     
-    public static Map<Integer, ChatNode> participants;
+    public static Map<Integer, ChatNode> participants = new HashMap<Integer, ChatNode>();
     
     private int port;
     private String host;
@@ -25,16 +25,22 @@ public class ChatNode implements Runnable{
             config_info = config_info.replace("\n", "").replace("\r", "");
             System.out.println(config_info);
             
-            host = config_info.split(":")[0];
-            System.out.println(host);
-            port = Integer.parseInt(config_info.split(":")[1]);
-            System.out.println(port);
+            //host = config_info.split(":")[0];
+            //System.out.println(host);
+            //port = Integer.parseInt(config_info.split(":")[1]);
+            //System.out.println(port);
         }
         catch (Exception e)
         {
             System.out.println(e);
             System.out.println("Could not access file. ");
         }
+        int count = 0;
+    	for(Integer key : ChatNode.participants.keySet()) 
+    	{
+    		count++;
+    	}
+    	ChatNode.participants.put(count, this);
         
     }
     
@@ -72,10 +78,12 @@ public class ChatNode implements Runnable{
         	String full_ip_string = receiver.getInetAddress().toString().replace("/", ":");
         	String host_ip = full_ip_string.split(":")[0];
         	
+        	host = host_ip;
+        	port = receiver.getLocalPort();        	
         	System.out.println(host_ip);
         	System.out.println(receiver.getLocalPort());
         	
-        	(new Thread(new Receiver(new ServerSocket(0), this))).start();
+        	(new Thread(new Receiver(receiver, this))).start();
             (new Thread(new Sender(this))).start();
             
         	//(new Sender(new Socket("192.168.1.4", 5555))).run();
