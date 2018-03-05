@@ -5,12 +5,13 @@ public class ReceiverWorker implements Runnable{
 	public ReceiverWorker(String msg)
 	{
 		message = msg; 
+		//System.out.println(msg);
 	}
 	
 	@Override
 	public void run()
 	{
-		System.out.println("Receiver worker run");
+		//System.out.println("In Receiver worker");
 		if (message.startsWith("./quit"))
 		{
 			System.out.println("Leaving the chat. ");
@@ -23,9 +24,8 @@ public class ReceiverWorker implements Runnable{
 		}
 		else
 		{
-			System.out.println(message);
+			System.out.println("\n" + message);
 		}
-		
 	}
 
 }
