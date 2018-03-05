@@ -30,9 +30,11 @@ public class ChatApplication {
             File config_file = new File(config_path);
             ChatNode new_node = new ChatNode(config_file);
             new_node.run();
+            
+            /*
             ChatNode test_node = new ChatNode(config_file);
             test_node.run();
-            System.out.println(ChatNode.participants.keySet());
+            System.out.println(ChatNode.participants.keySet());*/
         }
         catch(Exception e)
         {

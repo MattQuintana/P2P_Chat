@@ -25,9 +25,9 @@ public class ChatNode implements Runnable{
             config_info = config_info.replace("\n", "").replace("\r", "");
             //System.out.println(config_info);
             
-            //host = config_info.split(":")[0];
+            host = config_info.split(":")[0];
             //System.out.println(host);
-            //port = Integer.parseInt(config_info.split(":")[1]);
+            port = Integer.parseInt(config_info.split(":")[1]);
             //System.out.println(port);
             this.set_connect(true);
         }
