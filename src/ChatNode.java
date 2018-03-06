@@ -11,7 +11,6 @@ public class ChatNode implements Runnable, Serializable{
     
     private int port;
     private String host;
-    
     private boolean is_connected;
     
     public ChatNode(File config_file)
@@ -20,7 +19,7 @@ public class ChatNode implements Runnable, Serializable{
         //      HOST:PORTNUM
         try
         {
-        	System.out.println("In chat node initialization.");
+        	//System.out.println("In chat node initialization.");
             BufferedReader reader = new BufferedReader(new FileReader(config_file));
             String config_info = reader.readLine();
             config_info = config_info.replace("\n", "").replace("\r", "");
@@ -53,18 +52,30 @@ public class ChatNode implements Runnable, Serializable{
     	ChatNode.participants.put(count, new_participant);
     }
     
-    public void remove_participant(ChatNode leaving_participant)
+    // Remove a node from the participants table
+    public synchronized void remove_participant(ChatNode leaving_participant)
     {
-    	// Remove it from the participants table
-		for (Map.Entry<Integer, ChatNode> entry : ChatNode.participants.entrySet())
-		{
-			// If found the match 
-			if (entry.getValue() == leaving_participant)
-			{
-				// Remove it
-				ChatNode.participants.remove(entry.getKey());
-			}
-		}
+    	try
+    	{
+    		// For every node in the table
+    		for (Map.Entry<Integer, ChatNode> entry : ChatNode.participants.entrySet())
+    		{
+    			ChatNode cur_entry = entry.getValue();
+    			// If found the match 
+    			if (cur_entry.get_ip().equals(leaving_participant.get_ip()) && cur_entry.get_port() == leaving_participant.get_port())
+    			{
+    				// Remove it
+    				//System.out.println(ChatNode.participants.keySet());
+    				ChatNode.participants.get(entry.getKey()).set_connect(false);
+    				ChatNode.participants.remove(entry.getKey());
+    				//System.out.println(ChatNode.participants.keySet());
+    			}
+    		}
+    	}
+    	catch(Exception e)
+    	{
+    		
+    	}
     }
     
     // Set whether the node is connected to the chat
@@ -118,6 +129,8 @@ public class ChatNode implements Runnable, Serializable{
         	System.out.println("Could not start receiving and sending threads.");
         	System.out.println(e);
         }
+        
+        return;
     }
     
 }

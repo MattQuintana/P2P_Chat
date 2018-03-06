@@ -34,7 +34,8 @@ public class Receiver implements Runnable{
     	
         System.out.println("Started receiver thread on IP: " + ip_addr + ":" + node.get_port());
         
-        while(true)
+        // While we should still be listening. 
+        while(node.is_connected())
         {
         	try
         	{  
@@ -46,13 +47,6 @@ public class Receiver implements Runnable{
         	{
         		//System.out.println(e);
         	}
-        	
-        	// If we have left the chat, stop listening
-        	if (!node.is_connected())
-        	{
-        		break;
-        	}
-        	
         }
     }
 }
