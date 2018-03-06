@@ -1,8 +1,9 @@
 import java.util.*;
+import java.io.Serializable;
 import java.net.*;
 
 
-public class Message<C> {
+public class Message<C> implements Serializable{
 	
 	private String type;
 	private C content;

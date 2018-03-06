@@ -25,31 +25,34 @@ public class ChatApplication {
         		File config_file = new File(config_path);
                 ChatNode new_node = new ChatNode(config_file);
                 new_node.run();
+                new_node.add_participants(new_node);
                 break;
         	}
         	else if (choice.startsWith("./join") && (choice.length() > 7)) 
         	{
+        		// Configure 
+    			File config_file = new File(config_path);
+                ChatNode new_node = new ChatNode(config_file);
+                // Start the chat node
+                new_node.run();
+        		
         		// If joining the chat, want to open up a connection to the node you 
         		// are trying to join
         		String ip = choice.split(" ")[1].split(":")[0];
+        		//System.out.println(ip);
         		int port = Integer.parseInt(choice.split(" ")[1].split(":")[1]);
+        		//System.out.println(port);
         		
         		try 
         		{
         			// Create the initial socket connection
         			Socket initial_connection = new Socket(ip, port);
-        			
-        			// Configure 
-        			File config_file = new File(config_path);
-                    ChatNode new_node = new ChatNode(config_file);
                     
                     // Prepare the joining message
-                    Message initial_connect = new Message("JOIN", new_node, " joined.");
-                    PrintWriter send_output = new PrintWriter(initial_connection.getOutputStream());
-                    send_output.println(initial_connect);
+                    Message initial_connect = new Message("JOIN", new_node, Integer.toString(new_node.get_port()) + " joined.");
+                    ObjectOutputStream send_output = new ObjectOutputStream(initial_connection.getOutputStream());
+                    send_output.writeObject(initial_connect);
                     
-                    // Start the chat node
-                    new_node.run();
                     send_output.close();
                     initial_connection.close();
                     break;

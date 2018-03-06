@@ -25,6 +25,7 @@ public class Receiver implements Runnable{
     		System.out.println(e);
     	}
     	this.node = node;
+    	node.set_connect(true);
     }
     
     @Override

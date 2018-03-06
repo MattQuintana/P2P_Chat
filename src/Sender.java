@@ -6,7 +6,7 @@ import java.util.*;
 public class Sender implements Runnable{
     
     private Socket sender_socket;
-    private PrintWriter output;
+    private ObjectOutputStream output; 
     private ChatNode node;
     
     public Sender(ChatNode node)
@@ -31,13 +31,14 @@ public class Sender implements Runnable{
         	// Get the user input
         	String input = message.nextLine();
         	// Set the type, and the content
-			send_msg = new Message("TEXT", input, input);
+			send_msg = new Message("TEXT", input, Integer.toString(node.get_port()) + input);
+			
         	// If the user wants to quit
         	if (input.startsWith("./quit"))
     		{
         		
         		// Prepare a LEAVE message
-        		send_msg = new Message("LEAVE", node, "Left the chat");
+        		send_msg = new Message("LEAVE", node, Integer.toString(node.get_port()) + " left the chat");
         		// Display leave message to user
         		System.out.println("You have left the chat.");
         		// Set a quit flag
@@ -59,11 +60,12 @@ public class Sender implements Runnable{
             		{
         				// Create a socket to that entry
             			Socket send_socket = new Socket(entry.get_ip(), entry.get_port());
-            			
+            			//System.out.println("Sending message to " + entry.get_ip() + " " + entry.get_port());
             			// Setup output writing
-            			output = new PrintWriter(send_socket.getOutputStream());
+            			output = new ObjectOutputStream(send_socket.getOutputStream());
+            			
             			// Send the message object
-            			output.println(send_msg);
+            			output.writeObject(send_msg);
             			
             			// Close everything
             			output.close();
@@ -80,16 +82,7 @@ public class Sender implements Runnable{
         	// If the node has left the chat
         	if (!node.is_connected())
         	{
-        		// Remove it from the participants table
-        		for (Map.Entry<Integer, ChatNode> entry : ChatNode.participants.entrySet())
-        		{
-        			// If found the match 
-        			if (entry.getValue() == node)
-        			{
-        				// Remove it
-        				ChatNode.participants.remove(entry.getKey());
-        			}
-        		}
+        		node.remove_participant(node);
         		break;
         	}
     	}

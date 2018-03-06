@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 
-public class ChatNode implements Runnable{   
+public class ChatNode implements Runnable, Serializable{   
     
     public static Map<Integer, ChatNode> participants = new HashMap<Integer, ChatNode>();
     
@@ -20,6 +20,7 @@ public class ChatNode implements Runnable{
         //      HOST:PORTNUM
         try
         {
+        	System.out.println("In chat node initialization.");
             BufferedReader reader = new BufferedReader(new FileReader(config_file));
             String config_info = reader.readLine();
             config_info = config_info.replace("\n", "").replace("\r", "");
@@ -50,6 +51,20 @@ public class ChatNode implements Runnable{
     		count++;
     	}
     	ChatNode.participants.put(count, new_participant);
+    }
+    
+    public void remove_participant(ChatNode leaving_participant)
+    {
+    	// Remove it from the participants table
+		for (Map.Entry<Integer, ChatNode> entry : ChatNode.participants.entrySet())
+		{
+			// If found the match 
+			if (entry.getValue() == leaving_participant)
+			{
+				// Remove it
+				ChatNode.participants.remove(entry.getKey());
+			}
+		}
     }
     
     // Set whether the node is connected to the chat
