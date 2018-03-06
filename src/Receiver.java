@@ -47,7 +47,14 @@ public class Receiver implements Runnable{
         {
         	try
         	{        		
-        		(new ReceiverWorker(new BufferedReader(new InputStreamReader(receiving.accept().getInputStream())).readLine())).run();
+        		(new ReceiverWorker 
+        				(
+        				(Message) (new ObjectInputStream
+        						(receiving.accept().getInputStream()
+        								).readObject()
+        						)
+        				)
+        		).run();
         		
         	}
         	catch (Exception e)

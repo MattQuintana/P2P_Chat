@@ -18,7 +18,31 @@ public class ChatApplication {
         	Scanner input = new Scanner(System.in);
         	String choice = input.nextLine().replaceAll("\n", "").replaceAll("\r", "");
         	if (choice.equals("./start")) break;
-        	else if (choice.equals("./join")) break;
+        	else if (choice.startsWith("./join")) 
+        	{
+        		String ip = choice.split(" ")[1].split(":")[0];
+        		int port = Integer.parseInt(choice.split(" ")[1].split(":")[1]);
+        		
+        		try 
+        		{
+        			Socket initial_connection = new Socket(ip, port);
+        			File config_file = new File(config_path);
+                    ChatNode new_node = new ChatNode(config_file);
+                    
+                    Message initial_connect = new Message("JOIN", new_node, " joined.");
+                    PrintWriter send_output = new PrintWriter(initial_connection.getOutputStream());
+                    send_output.println(initial_connect);
+                    new_node.run();
+                    send_output.close();
+                    initial_connection.close();
+                    
+        			
+        		}
+        		catch(Exception e)
+        		{
+        			
+        		}
+        	}
         	else
         	{
         		System.out.println("Invalid input");

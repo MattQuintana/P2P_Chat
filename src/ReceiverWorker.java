@@ -1,8 +1,8 @@
 
 public class ReceiverWorker implements Runnable{
 	
-	private String message;
-	public ReceiverWorker(String msg)
+	private Message message;
+	public ReceiverWorker(Message msg)
 	{
 		message = msg; 
 		//System.out.println(msg);
@@ -12,17 +12,17 @@ public class ReceiverWorker implements Runnable{
 	public void run()
 	{
 		//System.out.println("In Receiver worker");
-		if (message.startsWith("./quit"))
+		if (message.get_type() == "LEAVE")
 		{
 			System.out.println("Leaving the chat. ");
 			
 		}
-		else if (message.startsWith("./join"))
+		else if (message.get_type() == "JOIN")
 		{
 			System.out.println("Joining the chat");
 			
 		}
-		else
+		else if (message.get_type() == "TEXT")
 		{
 			System.out.println("\n" + message);
 		}

@@ -26,19 +26,26 @@ public class Sender implements Runnable{
         	Scanner message = new Scanner(System.in);
         	
         	String input = message.nextLine();
+        	Message send_msg;
         	
         	if (input.startsWith("./quit"))
     		{
         		
-        		input = "Left the chat.";
+        		//input = "Left the chat.";
+        		send_msg = new Message("LEAVE", node, "Left the chat");
         		System.out.println("You have left the chat.");
         		// Set a quit flag
         		node.set_connect(false);
     		}
     		else if (input.startsWith("./join"))
     		{
-    			input = node.get_ip() + " has joined the chat.";
+    			//input = node.get_ip() + " has joined the chat.";
+    			send_msg = new Message("JOIN", node, " has joined the chat");
     			System.out.println("You have joined the chat.");
+    		}
+    		else
+    		{
+    			send_msg = new Message("TEXT", input, input);
     		}
     		
         	
@@ -52,9 +59,11 @@ public class Sender implements Runnable{
             		{
             			Socket send_socket = new Socket(entry.get_ip(), entry.get_port());
             			output = new PrintWriter(send_socket.getOutputStream());
-            			output.println(node.get_port() + ":" + input);
+            			//output.println(node.get_port() + ":" + input);
+            			output.println(send_msg);
             			//System.out.println(input);
             			output.close();
+            			send_socket.close();
             		}
             		catch (Exception e)
             		{
