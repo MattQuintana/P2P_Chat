@@ -8,6 +8,8 @@ public class Message<C> {
 	private C content;
 	private String string_msg;
 	
+	// Generic object to contain message content
+	// Used to send ChatNode objects through stream
 	private class Content<C>{
 		C content;
 		public void set(C content)

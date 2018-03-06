@@ -13,19 +13,11 @@ public class Receiver implements Runnable{
     {
     	try 
     	{
+    		// Initialize the server socket
     		receiving = new ServerSocket(node.get_port());
     		port_num = receiving.getLocalPort();
-    		//String temp_ip = receiving.getLocalSocketAddress().toString().split(":")[0];
-    		//System.out.println(temp_ip);
-    		//ip_addr = temp_ip.split("/")[0];
     		ip_addr = node.get_ip();
     		
-            int count = 0;
-        	for(Integer key : ChatNode.participants.keySet()) 
-        	{
-        		count++;
-        	}
-        	ChatNode.participants.put(count, node);
     	}
     	catch(Exception e)
     	{
@@ -33,8 +25,6 @@ public class Receiver implements Runnable{
     		System.out.println(e);
     	}
     	this.node = node;
-    	//node.set_ip(ip_addr);
-    	//node.set_port(port_num);
     }
     
     @Override
@@ -46,15 +36,9 @@ public class Receiver implements Runnable{
         while(true)
         {
         	try
-        	{        		
-        		(new ReceiverWorker 
-        				(
-        				(Message) (new ObjectInputStream
-        						(receiving.accept().getInputStream()
-        								).readObject()
-        						)
-        				)
-        		).run();
+        	{  
+        		// Spawn a new thread that takes in the message object
+        		(new ReceiverWorker ( (Message) ( new ObjectInputStream( receiving.accept().getInputStream() ).readObject() ), node ) ).run();
         		
         	}
         	catch (Exception e)
@@ -62,6 +46,7 @@ public class Receiver implements Runnable{
         		//System.out.println(e);
         	}
         	
+        	// If we have left the chat, stop listening
         	if (!node.is_connected())
         	{
         		break;

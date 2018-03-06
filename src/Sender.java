@@ -21,47 +21,51 @@ public class Sender implements Runnable{
         // Looking for user input to make their message
     	while(true)
     	{
-    		//System.out.println(ChatNode.participants.keySet());
+    		// Message to be sent to other participatns
+    		Message send_msg;
+    		
+    		// Prompt for input
     		System.out.print(node.get_port() + ": ");
         	Scanner message = new Scanner(System.in);
         	
+        	// Get the user input
         	String input = message.nextLine();
-        	Message send_msg;
-        	
+        	// Set the type, and the content
+			send_msg = new Message("TEXT", input, input);
+        	// If the user wants to quit
         	if (input.startsWith("./quit"))
     		{
         		
-        		//input = "Left the chat.";
+        		// Prepare a LEAVE message
         		send_msg = new Message("LEAVE", node, "Left the chat");
+        		// Display leave message to user
         		System.out.println("You have left the chat.");
         		// Set a quit flag
         		node.set_connect(false);
     		}
+        	// If the user wants to be funny.
     		else if (input.startsWith("./join"))
     		{
-    			//input = node.get_ip() + " has joined the chat.";
-    			send_msg = new Message("JOIN", node, " has joined the chat");
-    			System.out.println("You have joined the chat.");
+    			System.out.println("You are already in chat.");
     		}
-    		else
-    		{
-    			send_msg = new Message("TEXT", input, input);
-    		}
-    		
         	
+        	// Send the message to all of the participants
         	for (ChatNode entry : ChatNode.participants.values())
         	{
-        		//System.out.println(entry.get_ip());
-        		//System.out.println(entry.get_port());
+        		// If the entry is not the same as ourselves
         		if (entry != node)
         		{
         			try 
             		{
+        				// Create a socket to that entry
             			Socket send_socket = new Socket(entry.get_ip(), entry.get_port());
+            			
+            			// Setup output writing
             			output = new PrintWriter(send_socket.getOutputStream());
-            			//output.println(node.get_port() + ":" + input);
+            			// Send the message object
             			output.println(send_msg);
-            			//System.out.println(input);
+            			
+            			// Close everything
             			output.close();
             			send_socket.close();
             		}
@@ -73,21 +77,16 @@ public class Sender implements Runnable{
         		
         	}
         	
-        	// for every entry in the participants
-        		// try to create a socket with Chatnode.ip
-        		// and ChatNode.port 
-        		// Send the message over the printwriter - output - to the socket        		
-        	
-        	// Check quit flag 
-        		// If has quit, 
-        			// break loop and close connection, and remove from table
+        	// If the node has left the chat
         	if (!node.is_connected())
         	{
-        		//System.out.println(node.get_port() + " Exiting");
+        		// Remove it from the participants table
         		for (Map.Entry<Integer, ChatNode> entry : ChatNode.participants.entrySet())
         		{
+        			// If found the match 
         			if (entry.getValue() == node)
         			{
+        				// Remove it
         				ChatNode.participants.remove(entry.getKey());
         			}
         		}

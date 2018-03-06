@@ -37,49 +37,62 @@ public class ChatNode implements Runnable{
             System.out.println("Could not access file. ");
         }
         
-        /*
-        int count = 0;
-    	for(Integer key : ChatNode.participants.keySet()) 
-    	{
-    		count++;
-    	}
-    	ChatNode.participants.put(count, this);*/
-        
     }
     
+    public void add_participants(ChatNode new_participant)
+    {
+        int count = 0;
+        // Find set the new key
+    	for(Integer key : ChatNode.participants.keySet()) 
+    	{
+    		// Get the current key and make an offset by one up.
+    		count = key;
+    		count++;
+    	}
+    	ChatNode.participants.put(count, new_participant);
+    }
+    
+    // Set whether the node is connected to the chat
     public void set_connect(boolean is_true)
     {
     	is_connected = is_true;
     }
     
+    // Return the connection status
     public boolean is_connected()
     {
     	return is_connected;
     }
     
+    // Get the nodes port
     public int get_port() 
     {
     	return port;
     }
     
+    // Get the nodes IP
     public String get_ip()
     {
     	return host;
     }
     
+    // Set the IP address of node
     public void set_ip(String ip)
     {
     	host = ip;
     }
     
+    // Set the port of node
     public void set_port(int port)
     {
     	this.port = port;
     }
     
+    
     @Override
     public void run()
     {
+    	// Spawn off two new threads for receiving and sending
         try
         {     	
         	(new Thread(new Receiver(this))).start();
